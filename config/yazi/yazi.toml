@@ -1,0 +1,6 @@
+[preview]
+max_width = 1200
+max_height = 1600
+image_quality = 70
+image_delay = 40
+image_filter = "triangle"
