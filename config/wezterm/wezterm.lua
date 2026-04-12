@@ -292,7 +292,11 @@ if is_windows then
     config.default_prog = { "C:/Program Files/Git/bin/bash.exe", "-l" }
   end
 elseif not is_macos then
-  config.default_prog = { "zsh", "-l" }
+  config.default_prog = {
+    "zsh",
+    "-lc",
+    "if [ -z \"$TMUX\" ] && command -v tmux >/dev/null 2>&1; then exec tmux new-session -A -s main; else exec $SHELL; fi",
+  }
 end
 
 config.keys = {
