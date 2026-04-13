@@ -3,3 +3,8 @@
 *.bak.*
 __pycache__/
 *.pyc
+config/zsh/.zcompdump
+config/zsh/.zcompdump-xing-5.8.1
+config/zsh/.zcompdump-xing-5.8.1.zwc
+nvim.log
+.codex
