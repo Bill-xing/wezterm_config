@@ -154,6 +154,9 @@ install_config_payload() {
   link_or_copy "$REPO_ROOT/config/wezterm/wezterm.lua" "$HOME/.wezterm.lua"
   link_or_copy "$REPO_ROOT/config/nvim" "$cfg/nvim"
   link_or_copy "$REPO_ROOT/config/yazi" "$cfg/yazi"
+  if [ -d "$REPO_ROOT/config/tmux-powerline" ]; then
+    link_or_copy "$REPO_ROOT/config/tmux-powerline" "$cfg/tmux-powerline"
+  fi
 
   if [ -f "$REPO_ROOT/config/lazygit/config.yml" ]; then
     link_or_copy "$REPO_ROOT/config/lazygit" "$cfg/lazygit"
@@ -264,6 +267,7 @@ install_neovim_linux() {
   extracted="$(find "$tmp_dir" -maxdepth 1 -type d -name 'nvim-*' | head -n 1)"
   [ -n "$extracted" ] || die "failed to unpack Neovim archive"
 
+  mkdir -p "$HOME/.local/opt" "$HOME/.local/bin"
   rm -rf "$HOME/.local/opt/nvim"
   mv "$extracted" "$HOME/.local/opt/nvim"
   ln -sf "$HOME/.local/opt/nvim/bin/nvim" "$HOME/.local/bin/nvim"
@@ -274,8 +278,8 @@ install_lazygit_linux() {
 
   arch="$(linux_arch)"
   case "$arch" in
-    x86_64) pattern='Linux_x86_64\\.tar\\.gz$' ;;
-    arm64) pattern='Linux_arm64\\.tar\\.gz$' ;;
+    x86_64) pattern='[Ll]inux_x86_64\.tar\.gz$' ;;
+    arm64) pattern='[Ll]inux_arm64\.tar\.gz$' ;;
   esac
 
   url="$(github_latest_asset_url 'jesseduffield/lazygit' "$pattern")"
@@ -286,6 +290,7 @@ install_lazygit_linux() {
   log "Installing Lazygit from $url"
   fetch_url "$url" "$tmp_dir/$asset_name"
   tar -xzf "$tmp_dir/$asset_name" -C "$tmp_dir"
+  mkdir -p "$HOME/.local/bin"
   install -m 0755 "$tmp_dir/lazygit" "$HOME/.local/bin/lazygit"
 }
 
@@ -294,11 +299,17 @@ install_yazi_linux() {
 
   arch="$(linux_arch)"
   case "$arch" in
-    x86_64) pattern='x86_64-unknown-linux-(gnu|musl)\\.zip$' ;;
-    arm64) pattern='aarch64-unknown-linux-(gnu|musl)\\.zip$' ;;
+    x86_64) pattern='x86_64-unknown-linux-musl\.zip$' ;;
+    arm64) pattern='aarch64-unknown-linux-musl\.zip$' ;;
   esac
 
-  url="$(github_latest_asset_url 'sxyazi/yazi' "$pattern")"
+  url="$(github_latest_asset_url 'sxyazi/yazi' "$pattern" 2>/dev/null)" || {
+    case "$arch" in
+      x86_64) pattern='x86_64-unknown-linux-gnu\.zip$' ;;
+      arm64) pattern='aarch64-unknown-linux-gnu\.zip$' ;;
+    esac
+    url="$(github_latest_asset_url 'sxyazi/yazi' "$pattern")"
+  }
   tmp_dir="$(mktemp -d)"
   trap 'rm -rf "$tmp_dir"' RETURN
   asset_name="$(basename "$url")"
@@ -309,6 +320,7 @@ install_yazi_linux() {
   unpacked="$(find "$tmp_dir" -maxdepth 1 -type d -name 'yazi-*' | head -n 1)"
   [ -n "$unpacked" ] || die "failed to unpack Yazi archive"
 
+  mkdir -p "$HOME/.local/bin"
   install -m 0755 "$unpacked/yazi" "$HOME/.local/bin/yazi"
   install -m 0755 "$unpacked/ya" "$HOME/.local/bin/ya"
 }

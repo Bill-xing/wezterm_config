@@ -264,11 +264,12 @@ config.show_tab_index_in_tab_bar = false
 config.tab_max_width = 42
 config.show_new_tab_button_in_tab_bar = true
 config.tab_bar_at_bottom = false
+config.notification_handling = "AlwaysShow"
 
 config.enable_scroll_bar = false
 config.scrollback_lines = 10000
 config.adjust_window_size_when_changing_font_size = false
-config.window_decorations = is_macos and "RESIZE | TITLE | MACOS_FORCE_ENABLE_SHADOW" or "RESIZE"
+config.window_decorations = is_macos and "RESIZE | TITLE | MACOS_FORCE_ENABLE_SHADOW" or "RESIZE | TITLE"
 config.audible_bell = "Disabled"
 config.visual_bell = {
   fade_in_function = "EaseIn",
@@ -295,7 +296,7 @@ elseif not is_macos then
   config.default_prog = {
     "zsh",
     "-lc",
-    "if [ -z \"$TMUX\" ] && command -v tmux >/dev/null 2>&1; then exec tmux new-session -A -s main; else exec $SHELL; fi",
+    "if [ -z \"$TMUX\" ] && command -v tmux >/dev/null 2>&1; then tmux new-session -A -s main; fi; exec zsh -l",
   }
 end
 

@@ -20,6 +20,7 @@
 
 - `config/zsh/.zshrc` + `config/zsh/.p10k.zsh`: zsh / oh-my-zsh / powerlevel10k
 - `config/tmux/.tmux.conf`: tmux 主配置，包含 `ikjl` pane 导航、session/window 快捷键、增强状态栏
+- `config/tmux-powerline/`: tmux-powerline 自定义主题与段位配置
 - `config/nvim/`: LazyVim 配置目录，保留 `lazy-lock.json`
 - `config/yazi/yazi.toml`: yazi 功能配置
 - `config/yazi/keymap.toml`: yazi 自定义键位，采用 `ikjl` 导航
@@ -73,6 +74,10 @@ cd /path/to/this/repo
 chsh -s "$(command -v zsh)"
 exec zsh
 ```
+
+Ubuntu 平台额外注意事项见：
+
+- `docs/ubuntu-使用注意事项.md`
 
 ### 3. Windows + MSYS2
 
