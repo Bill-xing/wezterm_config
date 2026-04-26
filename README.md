@@ -21,6 +21,7 @@
 - `config/zsh/.zshrc` + `config/zsh/.p10k.zsh`: zsh / oh-my-zsh / powerlevel10k
 - `config/tmux/.tmux.conf`: tmux 主配置，包含 `ikjl` pane 导航、session/window 快捷键、增强状态栏
 - `config/nvim/`: LazyVim 配置目录，保留 `lazy-lock.json`
+- `config/lazygit/config.yml`: lazygit 用户配置，当前迁移 `delta` pager
 - `config/yazi/yazi.toml`: yazi 功能配置
 - `config/yazi/keymap.toml`: yazi 自定义键位，采用 `ikjl` 导航
 - `config/wezterm/wezterm.lua`: WezTerm 跨平台配置
@@ -32,7 +33,7 @@
 
 - 仓库只跟踪你自己的配置，不直接 vendoring 整个 `oh-my-zsh`、`powerlevel10k`、tmux TPM 插件目录。
 - 第三方依赖在安装阶段按 `bootstrap/plugins.lock.sh` 里的固定 commit 拉取。
-- `lazygit` 当前没有单独的用户配置文件，因此只负责安装程序，不迁移运行态 `state.yml`。
+- `lazygit` 只迁移用户配置 `config.yml`，不迁移运行态 `state.yml`。
 - Windows 方案以 MSYS2 为 Unix 工具栈，WezTerm 和 Lazygit 通过 `winget` 安装。
 - 安装默认在 Unix 上使用软链接，在 Windows / MSYS2 上默认复制文件；可通过 `DOTFILES_LINK_MODE=symlink|copy` 覆盖。
 
@@ -97,8 +98,8 @@ cd /c/path/to/repo
 - `winget`: `WezTerm`、`Lazygit`
 - 配置镜像：
   - `~/.zshrc` `~/.p10k.zsh` `~/.tmux.conf` `~/.wezterm.lua`
-  - `~/.config/nvim` / `~/.config/yazi`
-  - 同时同步到 Windows 原生程序常用位置：`%LOCALAPPDATA%\nvim`、`%APPDATA%\yazi\config`
+  - `~/.config/nvim` / `~/.config/yazi` / `~/.config/lazygit`
+  - 同时同步到 Windows 原生程序常用位置：`%LOCALAPPDATA%\nvim`、`%APPDATA%\yazi\config`、`%APPDATA%\lazygit`
 
 ## 平台兼容处理
 
@@ -150,6 +151,12 @@ cd /c/path/to/repo
   - `yy / dd / pp`: 复制 / 剪切 / 粘贴
   - `g` 系列：快速跳常用目录
   - `w`: 任务面板
+
+### lazygit
+
+- `config/lazygit/config.yml` 来自当前机器配置。
+- 当前配置把 git pager 设为 `delta --dark --paging=never`，优先使用 side-by-side + line numbers，兼容项保留普通 line numbers。
+- 安装脚本会部署到 `~/.config/lazygit`；Windows / MSYS2 下也会同步到 `%APPDATA%\lazygit`。
 
 ### WezTerm
 
@@ -208,4 +215,4 @@ PY
 
 - `LazyVim` 首次启动会自动拉取 `lazy.nvim` 和插件，需要联网。
 - Ubuntu / Windows 上字体不会强制自动安装；如果希望图标完整，建议安装 `JetBrainsMono Nerd Font`。
-- `lazygit` 当前没有独立配置文件，所以仓库没有 `config/lazygit/config.yml`。
+- `lazygit` 的 `state.yml` 是本机运行态数据，仓库只迁移 `config.yml`。
